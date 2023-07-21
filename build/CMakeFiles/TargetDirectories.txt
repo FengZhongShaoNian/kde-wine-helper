@@ -1,5 +1,0 @@
-/home/qinruihua/CLionProjects/kde-wine-helper/build/CMakeFiles/KF5WindowSystem_QCH.dir
-/home/qinruihua/CLionProjects/kde-wine-helper/build/CMakeFiles/kde-wine-helper.dir
-/home/qinruihua/CLionProjects/kde-wine-helper/build/CMakeFiles/edit_cache.dir
-/home/qinruihua/CLionProjects/kde-wine-helper/build/CMakeFiles/rebuild_cache.dir
-/home/qinruihua/CLionProjects/kde-wine-helper/build/CMakeFiles/kde-wine-helper_autogen.dir

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(KDEWineHelper)
+project(kde-wine-helper)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
@@ -19,8 +19,8 @@ find_package(KF5 REQUIRED COMPONENTS WindowSystem)
 set(IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/icons/app.png")
 configure_file(${IMAGE_PATH} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
-add_executable(KDEWineHelper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp)
-target_link_libraries(KDEWineHelper
+add_executable(kde-wine-helper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp)
+target_link_libraries(kde-wine-helper
         Qt5::Core
         KF5::WindowSystem
         )

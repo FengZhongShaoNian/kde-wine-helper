@@ -1,16 +1,18 @@
 [
   {
     "windowName": "WeChat",
-    "autoActivateWindow": true,
+    "autoActivateWindow": false,
     "showTrayNotify": true,
+    "trayIcon": "./icons/wechat.png",
     "notifyTitle": "微信",
     "notifyContent": "你有新的微信消息",
     "showTrayNotifyDurationInSeconds": 15
   },
   {
     "windowName": "企业微信",
-    "autoActivateWindow": true,
+    "autoActivateWindow": false,
     "showTrayNotify": true,
+    "trayIcon": "./icons/wxwork.png",
     "notifyTitle": "企业微信",
     "notifyContent": "你有新的企微消息",
     "showTrayNotifyDurationInSeconds": 60

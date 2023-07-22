@@ -13,15 +13,17 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 find_package(Qt5 COMPONENTS
         Core
+        DBus
         REQUIRED)
 find_package(KF5 REQUIRED COMPONENTS WindowSystem)
 
 set(IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/icons/app.png")
 configure_file(${IMAGE_PATH} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
-add_executable(kde-wine-helper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp)
+add_executable(kde-wine-helper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp Config.h)
 target_link_libraries(kde-wine-helper
         Qt5::Core
+        Qt5::DBus
         KF5::WindowSystem
         )
 

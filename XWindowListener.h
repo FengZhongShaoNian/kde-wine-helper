@@ -6,42 +6,56 @@
 #define WECHATMESSAGENOTIFIER_XWINDOWLISTENER_H
 
 #include "Notifier.h"
+#include "Config.h"
+
+#include <QMap>
 #include <KWindowSystem>
-
-struct Config {
-
-    // 需要监听的窗口名称
-    QString windowName;
-
-    // 当窗口处于DemandsAttention状态时，是否自动切换到该窗口
-    bool autoActivateWindow;
-
-    // 当窗口处于DemandsAttention状态时，是否展示托盘通知
-    bool showTrayNotify;
-
-    // 托盘通知的标题
-    QString notifyTitle;
-
-    // 托盘通知的内容
-    QString notifyContent;
-
-    // 托盘通知的展示时长
-    int showTrayNotifyDurationInSeconds;
-};
 
 class XWindowListener : public QObject{
     Q_OBJECT
 public:
-    explicit XWindowListener(QList<Config> configs,
-                             Notifier *notifier,
+    explicit XWindowListener(const QList<Config>& configs,
                              QObject *parent = nullptr);
     virtual ~XWindowListener();
 
+public slots:
     void onWindowChanged(WId wid, NET::Properties prop1, NET::Properties2 prop2);
 
+    void onTimeout();
+
+    void onWindowRemoved(WId wid);
+
+    void onActiveWindowChanged(WId wid);
+
+public:
+    /**
+     * @return 所有被用户感兴趣的窗口
+     */
+    QSet<WId> listAllInterestWindowsId();
+
+    /**
+     * 判断指定窗口是否是用户感兴趣的窗口
+     * @param wid 窗口id
+     * @return 窗口是否是用户感兴趣的窗口
+     */
+    bool isInterestWindow(WId wid);
+
+    /**
+     * 判断窗口是否需要关注
+     * @param wid 窗口id
+     * @return 窗口是否处于需要关注的状态
+     */
+    static bool isWindowDemandsAttention(WId wid);
+
+    static QString getWindowName(WId wid);
+
 private:
-    QList<Config> configs;
-    Notifier* notifier;
+    QMap<QString, Config> configMap;
+    QMap<QString, Notifier*> notifierMap;
+    QTimer* timer;
+
+    Config& getConfigForWindow(QString& windowName);
+    Notifier* getNotifierFor(QString &windowName);
 };
 
 #endif //WECHATMESSAGENOTIFIER_XWINDOWLISTENER_H

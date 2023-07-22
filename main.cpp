@@ -7,11 +7,12 @@
 #include <QSystemTrayIcon>
 #include <QFile>
 #include <QJsonDocument>
+#include <QJsonArray>
 #include <QJsonObject>
 
 #include <KWindowSystem>
 #include <KWindowInfo>
-#include <QJsonArray>
+#include <QMenu>
 
 QList<Config> readConfig()
 {
@@ -40,12 +41,14 @@ QList<Config> readConfig()
         bool autoActivateWindow = jsonObject["autoActivateWindow"].toBool();
         bool showTrayNotify = jsonObject["showTrayNotify"].toBool();
         QString notifyTitle = jsonObject["notifyTitle"].toString();
+        QString trayIcon = jsonObject["trayIcon"].toString();
         QString notifyContent = jsonObject["notifyContent"].toString();
         int showTrayNotifyDurationInSeconds = jsonObject["showTrayNotifyDurationInSeconds"].toInt();
 
         qDebug() << "windowName: " << windowName
         << "\nautoActivateWindow: " << autoActivateWindow
         << "\nshowTrayNotify: " << showTrayNotify
+        << "\ntrayIcon: " << trayIcon
         << "\nnotifyTitle: " << notifyTitle
         << "\nnotifyContent: " << notifyContent
         << "\nshowTrayNotifyDurationInSeconds: " << showTrayNotifyDurationInSeconds
@@ -55,6 +58,7 @@ QList<Config> readConfig()
             windowName = windowName,
             autoActivateWindow = autoActivateWindow,
             showTrayNotify = showTrayNotify,
+                trayIcon = trayIcon,
                 notifyTitle = notifyTitle,
                 notifyContent = notifyContent,
                 showTrayNotifyDurationInSeconds = showTrayNotifyDurationInSeconds
@@ -64,18 +68,32 @@ QList<Config> readConfig()
     return configs;
 }
 
+void createAppTrayIcon(QApplication* app){
+    auto systemTrayIcon = new QSystemTrayIcon(app);
+
+    QIcon appIcon("./icons/app.png");
+
+    systemTrayIcon->setIcon(appIcon);
+
+    auto menu = new QMenu();
+    auto quit = new QAction("退出");
+    QObject::connect(quit, &QAction::triggered, [&](){
+        QApplication::quit();
+    });
+
+    menu->addAction(quit);
+
+    systemTrayIcon->setContextMenu(menu);
+    systemTrayIcon->show();
+}
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
     QList<Config> configs = readConfig();
-    Notifier notifier(&app);
 
-    XWindowListener xWindowListener(configs, &notifier, &app);
-    QObject::connect(KWindowSystem::self()
-            , static_cast<void (KWindowSystem::*)(WId, NET::Properties, NET::Properties2)>
-                     (&KWindowSystem::windowChanged)
-            , &xWindowListener, &XWindowListener::onWindowChanged);
+    XWindowListener xWindowListener(configs, &app);
 
+    createAppTrayIcon(&app);
     return QApplication::exec();
 }

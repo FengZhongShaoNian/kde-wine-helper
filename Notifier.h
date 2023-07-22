@@ -49,8 +49,6 @@ public:
 
     void showInformation(Information& information);
 
-    signals:
-    void exitApp();
 public:
 
     /**

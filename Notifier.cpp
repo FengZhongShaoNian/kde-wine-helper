@@ -22,16 +22,6 @@ Notifier::Notifier(QIcon trayIcon, QObject *parent) : QObject(parent) {
     this->transparentIcon=QIcon("./icons/transparent.png");
 
     systemTrayIcon->setIcon(this->normalIcon);
-
-    auto menu = new QMenu();
-    auto quit = new QAction("退出");
-    connect(quit, &QAction::triggered, [&](){
-        emit exitApp();
-    });
-
-    menu->addAction(quit);
-
-    systemTrayIcon->setContextMenu(menu);
     systemTrayIcon->show();
 
     this->timer = new QTimer(this);

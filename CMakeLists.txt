@@ -17,8 +17,14 @@ find_package(Qt5 COMPONENTS
         REQUIRED)
 find_package(KF5 REQUIRED COMPONENTS WindowSystem)
 
-set(IMAGE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/icons/app.png")
-configure_file(${IMAGE_PATH} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+set(CONFIG_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/config.json")
+configure_file(${CONFIG_FILE_PATH} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
+file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/icons")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/app.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/icons")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/transparent.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/icons")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/wechat.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/icons")
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/wxwork.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/icons")
 
 add_executable(kde-wine-helper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp Config.h)
 target_link_libraries(kde-wine-helper

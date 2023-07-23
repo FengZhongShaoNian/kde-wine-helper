@@ -13,12 +13,14 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
 find_package(Qt5 COMPONENTS
         Core
-        DBus
         REQUIRED)
 find_package(KF5 REQUIRED COMPONENTS WindowSystem)
 
 set(CONFIG_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/config.json")
 configure_file(${CONFIG_FILE_PATH} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
+set(DESKTOP_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/kde-wine-helper.desktop")
+configure_file(${DESKTOP_FILE_PATH} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/icons")
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/app.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/icons")
@@ -29,7 +31,6 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/wxwork.png" DESTINATION "${CMAKE_CU
 add_executable(kde-wine-helper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp Config.h PathUtil.h PathUtil.cpp)
 target_link_libraries(kde-wine-helper
         Qt5::Core
-        Qt5::DBus
         KF5::WindowSystem
         )
 

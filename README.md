@@ -2,6 +2,9 @@
 
 一个小工具，用于解决KDE上由于wine微信/企业微信来新消息时图标不显示/不闪烁导致无法知晓新消息是否到来的问题。
 
+效果：
+![screenshot](./screenshot/screenshot.gif)
+
 ## 安装编译依赖
 在archlinux上可以这样安装：
 ```shell
@@ -22,6 +25,38 @@ mkdir build
 cd build
 cmake ..
 make
+```
+
+## 配置文件说明
+```json
+[
+  {
+    // 微信窗口的名称。本工具根据这个窗口名称来识别微信窗口
+    "windowName": "WeChat",
+    // 新消息到来时是否自动切换到微信窗口
+    "autoActivateWindow": false,
+    // 新消息到来时是否弹出托盘通知
+    "showTrayNotify": true,
+    // 微信托盘图标
+    "trayIcon": "./icons/wechat.png",
+    // 托盘通知的标题
+    "notifyTitle": "微信",
+    // 托盘通知的内容
+    "notifyContent": "你有新的微信消息",
+    // 托盘通知的展示时长
+    "showTrayNotifyDurationInSeconds": 15
+  },
+  {
+    // 企业微信窗口的名称。本工具根据这个窗口名称来识别企微窗口
+    "windowName": "企业微信",
+    "autoActivateWindow": false,
+    "showTrayNotify": true,
+    "trayIcon": "./icons/wxwork.png",
+    "notifyTitle": "企业微信",
+    "notifyContent": "你有新的企微消息",
+    "showTrayNotifyDurationInSeconds": 60
+  }
+]
 ```
 
 ## 注意

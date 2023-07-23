@@ -11,13 +11,22 @@
 #include <QApplication>
 #include <QDebug>
 
-Notifier::Notifier(QIcon trayIcon, QObject *parent) : QObject(parent) {
+Notifier::Notifier(QIcon trayIcon, QString trayTooltip, QObject *parent) : QObject(parent) {
     this->systemTrayIcon = new QSystemTrayIcon(parent);
 
     this->normalIcon = std::move(trayIcon);
     this->transparentIcon=QIcon("./icons/transparent.png");
 
     systemTrayIcon->setIcon(this->normalIcon);
+    systemTrayIcon->setToolTip(trayTooltip);
+
+    this->trayMenu = new QMenu();
+    auto actionExit = new QAction("退出",this);
+    QObject::connect(actionExit, &QAction::triggered, [this](){
+       emit menuActionExitClicked();
+    });
+    this->trayMenu->addAction(actionExit);
+    systemTrayIcon->setContextMenu(this->trayMenu);
 
     this->timer = new QTimer(this);
     timer->setInterval(1000);
@@ -25,9 +34,9 @@ Notifier::Notifier(QIcon trayIcon, QObject *parent) : QObject(parent) {
 }
 
 Notifier::~Notifier() noexcept {
-    if(systemTrayIcon != nullptr){
-        delete systemTrayIcon;
-        systemTrayIcon = nullptr;
+    if(this->trayMenu != nullptr){
+        delete trayMenu;
+        trayMenu = nullptr;
     }
 }
 

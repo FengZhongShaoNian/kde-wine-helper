@@ -41,15 +41,15 @@ class Notifier : public QObject {
 Q_OBJECT
 
 public:
-    explicit Notifier(QIcon trayIcon, QObject* parent = nullptr);
+    explicit Notifier(QIcon trayIcon, QString trayTooltip, QObject *parent = nullptr);
 
     ~Notifier() override;
+
+public:
 
     void showInformation(const QString& title, const QString& content, int millSeconds);
 
     void showInformation(Information& information);
-
-public:
 
     /**
      * 让托盘图标开始闪烁
@@ -71,12 +71,19 @@ public:
      */
     void showTrayIcon();
 
+    signals:
+    /**
+     * 用户点击了托盘图标的「退出」菜单
+     */
+    void menuActionExitClicked();
+
 protected slots:
     void onTimerTimeout();
 
 private:
     QSystemTrayIcon *systemTrayIcon;
     QIcon normalIcon, transparentIcon;
+    QMenu* trayMenu;
     QTimer* timer;
     bool blinking = false;
 };

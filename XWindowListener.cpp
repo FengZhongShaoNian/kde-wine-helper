@@ -12,6 +12,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <KWindowInfo>
+#include <QProcess>
 
 
 XWindowListener::XWindowListener(const QList<Config>& configs,
@@ -20,10 +21,14 @@ XWindowListener::XWindowListener(const QList<Config>& configs,
     this->notifierMap = QMap<QString, Notifier*>();
 
     for (auto &config: configs){
-        this->configMap[config.windowName] = config;
+        const QString& windowName = config.windowName;
+        this->configMap[windowName] = config;
 
         QIcon icon(resolveFile(config.trayIcon));
-        auto notifier = new Notifier(icon, this);
+        auto notifier = new Notifier(icon, windowName , this);
+        QObject::connect(notifier, &Notifier::menuActionExitClicked, [windowName, this](){
+            this->exitApp(windowName);
+        });
         this->notifierMap[config.windowName] = notifier;
     }
 
@@ -184,6 +189,23 @@ void XWindowListener::onActiveWindowChanged(WId wid) {
     notifier->showTrayIcon();
 }
 
+void XWindowListener::exitApp(const QString &windowName) {
+    QSet<WId> windowIdSet = listAllInterestWindowsThatHaveBeenOpened();
+    for (const auto &wid: windowIdSet){
+        QString wName = getWindowName(wid);
+        if(wName == windowName){
+            KWindowInfo pidInfo = KWindowInfo(wid, NET::WMPid);
+            if(pidInfo.valid()){
+                int pid = pidInfo.pid();
+                QProcess::execute("kill", QStringList() << QString::number(pid));
+
+                // 通过杀死进程的方法关闭应用，无法接收到窗口关闭信号，所以需要手动隐藏托盘图标
+                getNotifierFor(wName)->hideTrayIcon();
+                return;
+            }
+        }
+    }
+}
 
 
 

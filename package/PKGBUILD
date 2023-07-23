@@ -31,6 +31,7 @@ build() {
 
 package() {
     mkdir -p "$pkgdir/opt/kde-wine-helper"
+    mkdir -p "$pkgdir/usr/share/applications"
     cd "$pkgname-$pkgver/build"
     cp "$pkgname" "$pkgdir/opt/kde-wine-helper"
     cp -r "icons" "$pkgdir/opt/kde-wine-helper"

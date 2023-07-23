@@ -11,6 +11,8 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <KWindowInfo>
+
 
 XWindowListener::XWindowListener(const QList<Config>& configs,
                                  QObject *parent) : QObject(parent) {
@@ -25,43 +27,46 @@ XWindowListener::XWindowListener(const QList<Config>& configs,
         this->notifierMap[config.windowName] = notifier;
     }
 
-    QSet<WId> windowIdSet = listAllInterestWindowsId();
-    QSet<QString> windowNameSet;
-    for (const auto &windowId: windowIdSet){
-        windowNameSet.insert(getWindowName(windowId));
-    }
-
-    for (auto it = this->notifierMap.constBegin(); it != this->notifierMap.constEnd(); ++it) {
-        const QString &key = it.key();
-        auto notifier = it.value();
-        if(!windowNameSet.contains(key)){
-            notifier->hideTrayIcon();
-        }
-    }
+    showTrayIconIfInterestWindowOpened();
 
     this->timer = new QTimer(this);
     this->timer->setInterval(1000*5);
     QObject::connect(this->timer, &QTimer::timeout, this, &XWindowListener::onTimeout);
     this->timer->start();
 
-    QObject::connect(KWindowSystem::self()
-            , static_cast<void (KWindowSystem::*)(WId, NET::Properties, NET::Properties2)>
-                     (&KWindowSystem::windowChanged)
+    QObject::connect(KX11Extras::self()
+            , static_cast<void (KX11Extras::*)(WId, NET::Properties, NET::Properties2)>
+                     (&KX11Extras::windowChanged)
             , this, &XWindowListener::onWindowChanged);
 
-    QObject::connect(KWindowSystem::self(),
-                     static_cast<void (KWindowSystem::*)(WId)>
-                     (&KWindowSystem::windowRemoved),
+    QObject::connect(KX11Extras::self(),
+                     static_cast<void (KX11Extras::*)(WId)>
+                     (&KX11Extras::windowRemoved),
              this, &XWindowListener::onWindowRemoved);
 
-    QObject::connect(KWindowSystem::self(),
-                     static_cast<void (KWindowSystem::*)(WId)>
-                     (&KWindowSystem::activeWindowChanged),
+    QObject::connect(KX11Extras::self(),
+                     static_cast<void (KX11Extras::*)(WId)>
+                     (&KX11Extras::activeWindowChanged),
                      this, &XWindowListener::onActiveWindowChanged);
 }
 
 XWindowListener::~XWindowListener() = default;
 
+void XWindowListener::showTrayIconIfInterestWindowOpened() {
+    QSet<WId> windowIdSet = listAllInterestWindowsThatHaveBeenOpened();
+    QSet<QString> windowNameSet;
+    for (const auto &windowId: windowIdSet){
+        windowNameSet.insert(getWindowName(windowId));
+    }
+
+    for (auto it = notifierMap.constBegin(); it != notifierMap.constEnd(); ++it) {
+        const QString &key = it.key();
+        auto notifier = it.value();
+        if(windowNameSet.contains(key)){
+            notifier->showTrayIcon();
+        }
+    }
+}
 
 void XWindowListener::onWindowChanged(WId wid, NET::Properties prop1, NET::Properties2 prop2) {
     qDebug() << "windowChange(WId wid, NET::Properties prop1, NET::Properties2 prop2) invoked" << Qt::endl;
@@ -80,14 +85,14 @@ void XWindowListener::onWindowChanged(WId wid, NET::Properties prop1, NET::Prope
             qDebug() << "Window [ wid=" << wid << ", name = " << windowName << "] demands Attention" << Qt::endl;
         }
 
-        Config& config = this->configMap[windowName];
+        Config& config = getConfigForWindow(windowName);
         Notifier *notifier = getNotifierFor(windowName);
 
         if(windowDemandsAttention){
             notifier->startBlink();
 
             if(config.autoActivateWindow){
-                KWindowSystem::activateWindow(wid);
+                KX11Extras::activateWindow(wid);
             }
 
             if(config.showTrayNotify){
@@ -108,7 +113,7 @@ Notifier* XWindowListener::getNotifierFor(QString &windowName) {
 }
 
 void XWindowListener::onTimeout() {
-    QSet<WId> windowIdList = listAllInterestWindowsId();
+    QSet<WId> windowIdList = listAllInterestWindowsThatHaveBeenOpened();
     for (const auto &item: windowIdList){
         QString windowName = getWindowName(item);
         Notifier* notifier = getNotifierFor(windowName);
@@ -119,7 +124,6 @@ void XWindowListener::onTimeout() {
         }
     }
 }
-
 
 void XWindowListener::onWindowRemoved(WId wid) {
      QString windowName = getWindowName(wid);
@@ -132,9 +136,9 @@ void XWindowListener::onWindowRemoved(WId wid) {
     }
 }
 
-QSet<WId> XWindowListener::listAllInterestWindowsId() {
+QSet<WId> XWindowListener::listAllInterestWindowsThatHaveBeenOpened() {
     QSet<WId> interestWindows;
-    QList<WId> windowIdList = KWindowSystem::windows();
+    QList<WId> windowIdList = KX11Extras::windows();
     for (const auto &wid: windowIdList){
         if(isInterestWindow(wid)){
             interestWindows.insert(wid);

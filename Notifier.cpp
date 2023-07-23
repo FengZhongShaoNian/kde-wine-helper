@@ -22,7 +22,6 @@ Notifier::Notifier(QIcon trayIcon, QObject *parent) : QObject(parent) {
     this->transparentIcon=QIcon("./icons/transparent.png");
 
     systemTrayIcon->setIcon(this->normalIcon);
-    systemTrayIcon->show();
 
     this->timer = new QTimer(this);
     timer->setInterval(1000);

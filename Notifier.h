@@ -13,21 +13,21 @@
 
 class Information {
 public:
-    Information(Config config){
+    explicit Information(const Config& config){
         this->title = config.notifyTitle;
         this->content = config.notifyContent;
         this->millSeconds = config.showTrayNotifyDurationInSeconds * 1000;
     }
 
-    const QString &getTitle() const {
+    [[nodiscard]] const QString &getTitle() const {
         return title;
     }
 
-    const QString &getContent() const {
+    [[nodiscard]] const QString &getContent() const {
         return content;
     }
 
-    int getMillSeconds() const {
+    [[nodiscard]] int getMillSeconds() const {
         return millSeconds;
     }
 

@@ -9,14 +9,14 @@
 #include "Config.h"
 
 #include <QMap>
-#include <KWindowSystem>
+#include <KX11Extras>
 
 class XWindowListener : public QObject{
     Q_OBJECT
 public:
     explicit XWindowListener(const QList<Config>& configs,
                              QObject *parent = nullptr);
-    virtual ~XWindowListener();
+    ~XWindowListener() override;
 
 public slots:
     void onWindowChanged(WId wid, NET::Properties prop1, NET::Properties2 prop2);
@@ -29,9 +29,12 @@ public slots:
 
 public:
     /**
+     * 获取所有正在打开状态的（被最小化的窗口也被认为是处于打开状态）并且用户感兴趣的窗口
+     *
+     * 注：用户感兴趣的窗口指的是在{@link XWindowListener#configMap}中指定的窗口
      * @return 所有被用户感兴趣的窗口
      */
-    QSet<WId> listAllInterestWindowsId();
+    QSet<WId> listAllInterestWindowsThatHaveBeenOpened();
 
     /**
      * 判断指定窗口是否是用户感兴趣的窗口
@@ -56,6 +59,8 @@ private:
 
     Config& getConfigForWindow(QString& windowName);
     Notifier* getNotifierFor(QString &windowName);
+
+    void showTrayIconIfInterestWindowOpened();
 };
 
 #endif //WECHATMESSAGENOTIFIER_XWINDOWLISTENER_H

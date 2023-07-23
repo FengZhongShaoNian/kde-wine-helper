@@ -63,6 +63,8 @@ private:
     void showTrayIconIfInterestWindowOpened();
 
     void exitApp(const QString& windowName);
+
+    void activateWindow(const QString& windowName);
 };
 
 #endif //WECHATMESSAGENOTIFIER_XWINDOWLISTENER_H

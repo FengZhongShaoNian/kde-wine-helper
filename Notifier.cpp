@@ -28,6 +28,12 @@ Notifier::Notifier(QIcon trayIcon, QString trayTooltip, QObject *parent) : QObje
     this->trayMenu->addAction(actionExit);
     systemTrayIcon->setContextMenu(this->trayMenu);
 
+    QObject::connect(systemTrayIcon, &QSystemTrayIcon::activated, [this](QSystemTrayIcon::ActivationReason reason){
+        if(reason == QSystemTrayIcon::ActivationReason::Trigger){
+            emit this->trayIconClicked();
+        }
+    });
+
     this->timer = new QTimer(this);
     timer->setInterval(1000);
     QObject::connect(timer, &QTimer::timeout, this, &Notifier::onTimerTimeout);

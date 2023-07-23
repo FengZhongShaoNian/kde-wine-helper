@@ -77,6 +77,11 @@ public:
      */
     void menuActionExitClicked();
 
+    /**
+     * 托盘图标被点击
+     */
+    void trayIconClicked();
+
 protected slots:
     void onTimerTimeout();
 

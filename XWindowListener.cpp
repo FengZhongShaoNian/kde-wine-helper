@@ -29,6 +29,10 @@ XWindowListener::XWindowListener(const QList<Config>& configs,
         QObject::connect(notifier, &Notifier::menuActionExitClicked, [windowName, this](){
             this->exitApp(windowName);
         });
+        QObject::connect(notifier, &Notifier::trayIconClicked, [windowName, this](){
+            this->activateWindow(windowName);
+        });
+
         this->notifierMap[config.windowName] = notifier;
     }
 
@@ -97,7 +101,7 @@ void XWindowListener::onWindowChanged(WId wid, NET::Properties prop1, NET::Prope
             notifier->startBlink();
 
             if(config.autoActivateWindow){
-                KX11Extras::activateWindow(wid);
+                KX11Extras::forceActiveWindow(wid);
             }
 
             if(config.showTrayNotify){
@@ -203,6 +207,17 @@ void XWindowListener::exitApp(const QString &windowName) {
                 getNotifierFor(wName)->hideTrayIcon();
                 return;
             }
+        }
+    }
+}
+
+void XWindowListener::activateWindow(const QString &windowName) {
+    QSet<WId> windowIdSet = listAllInterestWindowsThatHaveBeenOpened();
+    for (const auto &wid: windowIdSet){
+        QString wName = getWindowName(wid);
+        if(wName == windowName){
+            KX11Extras::forceActiveWindow(wid);
+            return;
         }
     }
 }

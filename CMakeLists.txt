@@ -26,7 +26,7 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/transparent.png" DESTINATION "${CMA
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/wechat.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/icons")
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/icons/wxwork.png" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/icons")
 
-add_executable(kde-wine-helper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp Config.h)
+add_executable(kde-wine-helper main.cpp XWindowListener.h Notifier.h Notifier.cpp XWindowListener.cpp Config.h PathUtil.h PathUtil.cpp)
 target_link_libraries(kde-wine-helper
         Qt5::Core
         Qt5::DBus

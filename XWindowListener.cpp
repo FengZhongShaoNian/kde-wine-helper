@@ -3,6 +3,7 @@
 //
 #include "XWindowListener.h"
 #include "Notifier.h"
+#include "PathUtil.h"
 
 #include <stdexcept>
 
@@ -19,7 +20,7 @@ XWindowListener::XWindowListener(const QList<Config>& configs,
     for (auto &config: configs){
         this->configMap[config.windowName] = config;
 
-        QIcon icon(config.trayIcon);
+        QIcon icon(resolveFile(config.trayIcon));
         auto notifier = new Notifier(icon, this);
         this->notifierMap[config.windowName] = notifier;
     }

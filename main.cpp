@@ -1,4 +1,5 @@
 #include "XWindowListener.h"
+#include "PathUtil.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -10,7 +11,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-#include <KWindowSystem>
 #include <KWindowInfo>
 #include <QMenu>
 
@@ -18,7 +18,7 @@ QList<Config> readConfig()
 {
     QList<Config> configs;
 
-    QFile file("./config.json");
+    QFile file(resolveFile("./config.json"));
     if (!file.open(QIODevice::ReadOnly)) {
         qWarning("Couldn't open file './config.json' .");
         return configs;
@@ -71,7 +71,7 @@ QList<Config> readConfig()
 void createAppTrayIcon(QApplication* app){
     auto systemTrayIcon = new QSystemTrayIcon(app);
 
-    QIcon appIcon("./icons/app.png");
+    QIcon appIcon(resolveFile("./icons/app.png"));
 
     systemTrayIcon->setIcon(appIcon);
 

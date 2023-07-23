@@ -4,16 +4,12 @@
 
 #include "Notifier.h"
 
+#include <utility>
+
 #include <QMenu>
 #include <QAction>
 #include <QApplication>
 #include <QDebug>
-
-// Qt D-Bus
-#include <QDBusPendingReply>
-#include <QDBusInterface>
-#include <QDBusPendingCallWatcher>
-#include <utility>
 
 Notifier::Notifier(QIcon trayIcon, QObject *parent) : QObject(parent) {
     this->systemTrayIcon = new QSystemTrayIcon(parent);

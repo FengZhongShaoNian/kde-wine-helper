@@ -4,7 +4,6 @@
 #include <QApplication>
 #include <QDebug>
 #include <QtX11Extras/QX11Info>
-#include <QtGui/QWindow>
 #include <QSystemTrayIcon>
 #include <QFile>
 #include <QJsonDocument>

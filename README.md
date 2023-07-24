@@ -68,3 +68,5 @@ make
 2.此工具支持X11环境，可能不支持Wayland（我没试过，因为wine对Wayland的支持还不是很好，所以我依旧使用X11）。
 
 3.此工具会自行绘制微信/企微的托盘图标。如果向我一样有强迫症，可以通过`System Tray Settings`自行把wine创建的托盘图标隐藏。
+
+4.使用者需要根据自己的情况修改`config.json`中的`windowName`，以确保和自己的微信/企微的窗口名一致。窗口名可直接通过`latte-dock`的提示得知，也可以通过`wmctrl -l `命令查看。

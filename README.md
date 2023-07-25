@@ -5,6 +5,10 @@
 效果：
 ![screenshot](./screenshot/screenshot.gif)
 
+## 安装
+archlinux上可以直接使用`yay -S kde-wine-helper`一键安装。
+其它linux发行版可以按照下述教程自行编译。
+
 ## 安装编译依赖
 ### 在archlinux上可以这样安装：
 ```shell

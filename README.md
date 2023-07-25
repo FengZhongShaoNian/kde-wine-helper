@@ -6,7 +6,7 @@
 ![screenshot](./screenshot/screenshot.gif)
 
 ## 安装编译依赖
-在archlinux上可以这样安装：
+### 在archlinux上可以这样安装：
 ```shell
 # 安装gcc等工具
 sudo pacman -S gcc gdb cmake extra-cmake-modules
@@ -17,8 +17,34 @@ sudo pacman -S qt5-base
 # 安装kwindowsystem
 sudo pacman -S kwindowsystem
 ```
+### 在Ubuntu系列的linux上可以这样安装：
+
+安装新版本的cmake:
+```shell
+wget https://cmake.org/files/v3.26/cmake-3.26.4-linux-x86_64.tar.gz
+tar -xf cmake-3.26.4-linux-x86_64.tar.gz
+cd cmake-3.26.4-linux-x86_64/bin
+```
+
+`cmake-3.26.4-linux-x86_64/bin`中就有cmake的可执行文件。
+
+把cmake添加到PATH中：
+```shell
+export PATH=/directory/path/to/your/cmake:$PATH
+```
+请把`/directory/path/to/your/cmake`替换成cmake所在的目录的真实路径。
+
+安装其它工具：
+```shell
+sudo apt install -y build-essential
+sudo apt install -y extra-cmake-modules
+sudo apt install -y qtbase5-dev
+sudo apt install -y libkf5windowsystem-dev
+```
+
 
 ## 编译
+说明：在Ubuntu上编译可能会报错`fatal error: KX11Extras: No such file or directory`，如果遇到这个问题，请切换到`for-ubuntu`分支进行编译，该分支使用`KWindowSystem`而不是`KX11Extras`。
 ```shell
 rm -rf build
 mkdir build
@@ -67,6 +93,6 @@ make
 
 2.此工具支持X11环境，可能不支持Wayland（我没试过，因为wine对Wayland的支持还不是很好，所以我依旧使用X11）。
 
-3.此工具会自行绘制微信/企微的托盘图标。如果向我一样有强迫症，可以通过`System Tray Settings`自行把wine创建的托盘图标隐藏。
+3.此工具会自行绘制微信/企微的托盘图标。如果像我一样有强迫症，可以通过`System Tray Settings`自行把wine创建的托盘图标隐藏。
 
 4.使用者需要根据自己的情况修改`config.json`中的`windowName`，以确保和自己的微信/企微的窗口名一致。窗口名可直接通过`latte-dock`的提示得知，也可以通过`wmctrl -l `命令查看。

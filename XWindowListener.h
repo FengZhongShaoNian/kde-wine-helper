@@ -9,7 +9,7 @@
 #include "Config.h"
 
 #include <QMap>
-#include <KX11Extras>
+#include <KWindowSystem>
 
 class XWindowListener : public QObject{
     Q_OBJECT

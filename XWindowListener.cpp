@@ -43,19 +43,19 @@ XWindowListener::XWindowListener(const QList<Config>& configs,
     QObject::connect(this->timer, &QTimer::timeout, this, &XWindowListener::onTimeout);
     this->timer->start();
 
-    QObject::connect(KX11Extras::self()
-            , static_cast<void (KX11Extras::*)(WId, NET::Properties, NET::Properties2)>
-                     (&KX11Extras::windowChanged)
+    QObject::connect(KWindowSystem::self()
+            , static_cast<void (KWindowSystem::*)(WId, NET::Properties, NET::Properties2)>
+                     (&KWindowSystem::windowChanged)
             , this, &XWindowListener::onWindowChanged);
 
-    QObject::connect(KX11Extras::self(),
-                     static_cast<void (KX11Extras::*)(WId)>
-                     (&KX11Extras::windowRemoved),
+    QObject::connect(KWindowSystem::self(),
+                     static_cast<void (KWindowSystem::*)(WId)>
+                     (&KWindowSystem::windowRemoved),
              this, &XWindowListener::onWindowRemoved);
 
-    QObject::connect(KX11Extras::self(),
-                     static_cast<void (KX11Extras::*)(WId)>
-                     (&KX11Extras::activeWindowChanged),
+    QObject::connect(KWindowSystem::self(),
+                     static_cast<void (KWindowSystem::*)(WId)>
+                     (&KWindowSystem::activeWindowChanged),
                      this, &XWindowListener::onActiveWindowChanged);
 }
 
@@ -101,7 +101,7 @@ void XWindowListener::onWindowChanged(WId wid, NET::Properties prop1, NET::Prope
             notifier->startBlink();
 
             if(config.autoActivateWindow){
-                KX11Extras::forceActiveWindow(wid);
+                KWindowSystem::forceActiveWindow(wid);
             }
 
             if(config.showTrayNotify){
@@ -147,7 +147,7 @@ void XWindowListener::onWindowRemoved(WId wid) {
 
 QSet<WId> XWindowListener::listAllInterestWindowsThatHaveBeenOpened() {
     QSet<WId> interestWindows;
-    QList<WId> windowIdList = KX11Extras::windows();
+    QList<WId> windowIdList = KWindowSystem::windows();
     for (const auto &wid: windowIdList){
         if(isInterestWindow(wid)){
             interestWindows.insert(wid);
@@ -216,7 +216,7 @@ void XWindowListener::activateWindow(const QString &windowName) {
     for (const auto &wid: windowIdSet){
         QString wName = getWindowName(wid);
         if(wName == windowName){
-            KX11Extras::forceActiveWindow(wid);
+            KWindowSystem::forceActiveWindow(wid);
             return;
         }
     }

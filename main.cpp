@@ -3,7 +3,6 @@
 
 #include <QApplication>
 #include <QDebug>
-#include <QtX11Extras/QX11Info>
 #include <QSystemTrayIcon>
 #include <QFile>
 #include <QJsonDocument>

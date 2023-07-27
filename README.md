@@ -5,6 +5,8 @@
 效果：
 ![screenshot](./screenshot/screenshot.gif)
 
+Github看不到效果截图，可以访问Gitee仓库：https://gitee.com/fengzhongshaonian/kde-wine-helper
+
 ## 安装
 archlinux上可以直接使用`yay -S kde-wine-helper`一键安装。
 其它linux发行版可以按照下述教程自行编译。

@@ -65,6 +65,10 @@ private:
     void exitApp(const QString& windowName);
 
     void activateWindow(const QString& windowName);
+
+    bool isWindowActive(const QString& windowName);
+
+    void minimizeWindow(const QString &windowName);
 };
 
 #endif //WECHATMESSAGENOTIFIER_XWINDOWLISTENER_H

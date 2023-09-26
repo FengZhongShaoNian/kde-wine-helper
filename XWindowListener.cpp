@@ -30,7 +30,11 @@ XWindowListener::XWindowListener(const QList<Config>& configs,
             this->exitApp(windowName);
         });
         QObject::connect(notifier, &Notifier::trayIconClicked, [windowName, this](){
-            this->activateWindow(windowName);
+            if(isWindowActive(windowName)){
+                this->minimizeWindow(windowName);
+            } else {
+                this->activateWindow(windowName);
+            }
         });
 
         this->notifierMap[config.windowName] = notifier;
@@ -217,6 +221,26 @@ void XWindowListener::activateWindow(const QString &windowName) {
         QString wName = getWindowName(wid);
         if(wName == windowName){
             KX11Extras::forceActiveWindow(wid);
+            return;
+        }
+    }
+}
+
+bool XWindowListener::isWindowActive(const QString &windowName) {
+    WId wId = KX11Extras::activeWindow();
+    if(wId == 0){
+        // No window active, so return false.
+        return false;
+    }
+    return windowName == getWindowName(wId);
+}
+
+void XWindowListener::minimizeWindow(const QString &windowName) {
+    QSet<WId> windowIdSet = listAllInterestWindowsThatHaveBeenOpened();
+    for (const auto &wid: windowIdSet){
+        QString wName = getWindowName(wid);
+        if(wName == windowName){
+            KX11Extras::minimizeWindow(wid);
             return;
         }
     }

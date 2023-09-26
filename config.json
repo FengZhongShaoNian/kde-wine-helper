@@ -1,6 +1,6 @@
 [
   {
-    "windowName": "WeChat",
+    "windowName": "微信",
     "autoActivateWindow": false,
     "showTrayNotify": true,
     "trayIcon": "./icons/wechat.png",

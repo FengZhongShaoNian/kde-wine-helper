@@ -227,7 +227,7 @@ void XWindowListener::activateWindow(const QString &windowName) {
 }
 
 bool XWindowListener::isWindowActive(const QString &windowName) {
-    WId wId = KX11Extras::activeWindow();
+    WId wId = KWindowSystem::activeWindow();
     if(wId == 0){
         // No window active, so return false.
         return false;
@@ -240,7 +240,7 @@ void XWindowListener::minimizeWindow(const QString &windowName) {
     for (const auto &wid: windowIdSet){
         QString wName = getWindowName(wid);
         if(wName == windowName){
-            KX11Extras::minimizeWindow(wid);
+            KWindowSystem::minimizeWindow(wid);
             return;
         }
     }
